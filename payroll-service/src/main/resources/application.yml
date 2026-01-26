@@ -2,15 +2,15 @@ datasources:
   default:
     url: jdbc:oracle:thin:@//localhost:1521/FREEPDB1
     driverClassName: oracle.jdbc.OracleDriver
-    username: PayrollServiceUser
-    password: PayrollServiceUserPassword
+    username: PayrollService
+    password: PayrollServicePassword
 
 flyway:
   datasources:
     default:
       url: jdbc:oracle:thin:@//localhost:1521/FREEPDB1
-      user: PayrollServiceOwner
-      password: PayrollServiceOwnerPassword
+      username: PayrollService
+      password: PayrollServicePassword
       baseline-on-migrate: true
 
   oracle:
