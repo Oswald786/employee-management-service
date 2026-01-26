@@ -1,0 +1,20 @@
+datasources:
+  default:
+    url: jdbc:oracle:thin:@//localhost:1521/FREEPDB1
+    driverClassName: oracle.jdbc.OracleDriver
+    username: AuthService
+    password: AuthServicePassword
+jpa:
+  default:
+    enabled: false
+
+flyway:
+  datasources:
+    default:
+      url: jdbc:oracle:thin:@//localhost:1521/FREEPDB1
+      username: AuthService
+      password: AuthServicePassword
+      baseline-on-migrate: true
+
+  oracle:
+    sysdba: true

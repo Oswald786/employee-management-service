@@ -44,3 +44,18 @@ GRANT CREATE TABLE TO StaffManagementService;
 GRANT CREATE VIEW TO StaffManagementService;
 GRANT CREATE SEQUENCE TO StaffManagementService;
 GRANT CREATE PROCEDURE TO StaffManagementService;
+
+-- =========================
+-- Auth Service
+-- =========================
+CREATE USER AuthService
+    IDENTIFIED BY AuthServicePassword
+    DEFAULT TABLESPACE users
+    TEMPORARY TABLESPACE temp
+    QUOTA UNLIMITED ON users;
+
+GRANT CREATE SESSION TO AuthService;
+GRANT CREATE TABLE TO AuthService;
+GRANT CREATE VIEW TO AuthService;
+GRANT CREATE SEQUENCE TO AuthService;
+GRANT CREATE PROCEDURE TO AuthService;

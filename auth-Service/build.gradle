@@ -12,25 +12,18 @@ repositories {
 }
 
 dependencies {
+    implementation("io.micronaut.flyway:micronaut-flyway")
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+    runtimeOnly("com.oracle.database.jdbc:ojdbc11:23.3.0.23.09")
+    implementation("org.flywaydb:flyway-database-oracle")
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut.security:micronaut-security-jwt")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut.security:micronaut-security-annotations")
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
-    implementation("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
-    implementation("io.micronaut.data:micronaut-data-tx-hibernate")
-    implementation("io.micronaut.flyway:micronaut-flyway")
-    implementation("io.micronaut.security:micronaut-security-jwt")
-    implementation("io.micronaut.serde:micronaut-serde-jackson")
-    implementation("io.micronaut.sql:micronaut-hibernate-jpa")
-    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
-    implementation("jakarta.data:jakarta.data-api")
-    runtimeOnly("ch.qos.logback:logback-classic")
-    runtimeOnly("com.h2database:h2")
-    testImplementation("org.junit.platform:junit-platform-suite-engine")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    aotPlugins platform("io.micronaut.platform:micronaut-platform:4.10.7")
-    aotPlugins("io.micronaut.security:micronaut-security-aot")
+    runtimeOnly("org.yaml:snakeyaml")
 }
 
 
@@ -38,8 +31,8 @@ application {
     mainClass = "com.example.Application"
 }
 java {
-    sourceCompatibility = JavaVersion.toVersion("21")
-    targetCompatibility = JavaVersion.toVersion("21")
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
 }
 
 
@@ -69,7 +62,7 @@ micronaut {
 
 
 tasks.named("dockerfileNative") {
-    jdkVersion = "21"
+    jdkVersion = "17"
 }
 
 
