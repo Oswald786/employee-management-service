@@ -6,7 +6,9 @@ datasources:
     password: AuthServicePassword
 jpa:
   default:
-    enabled: false
+    enabled: true
+    entities:
+
 
 flyway:
   datasources:
