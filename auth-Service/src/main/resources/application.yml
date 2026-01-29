@@ -7,7 +7,8 @@ datasources:
 jpa:
   default:
     enabled: true
-    entities:
+    entiity-scan:
+      packages: com.ethan.entity
 
 
 flyway:
