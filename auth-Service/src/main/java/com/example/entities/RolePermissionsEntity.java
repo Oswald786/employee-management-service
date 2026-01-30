@@ -1,6 +1,5 @@
-package com.example.Models;
+package com.example.entities;
 
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,21 +11,17 @@ import lombok.Setter;
 
 @Serdeable
 @Entity
-@Table(name = "ROLES")
 @Getter
 @Setter
-public class RolesEntity {
+@Table(name = "ROLE_PERMISSIONS")
+public class RolePermissionsEntity {
 
     @Id
     @Column(name = "ROLE_ID")
     @NotNull
     private String roleId;
 
-    @Column(name = "ROLE_NAME")
+    @Column(name = "PERMISSION_ID")
     @NotNull
-    private String roleName;
-
-    @Column(name = "DESCRIPTION")
-    @Nullable
-    private String description;
+    private String permissionId;
 }

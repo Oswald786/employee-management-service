@@ -7,8 +7,20 @@ datasources:
 jpa:
   default:
     enabled: true
-    entiity-scan:
-      packages: com.ethan.entity
+    entity-scan:
+      packages: com.ethan.Entities
+micronaut:
+  application:
+    name: authService
+    version: 0.1
+    security:
+      enabled: true
+      token:
+        jwt:
+          signatures:
+            secret:
+              generator:
+                secret: MockTokenSecret
 
 
 flyway:

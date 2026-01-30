@@ -1,32 +1,32 @@
-package com.example.Models;
+package com.example.entities;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jdk.jfr.Enabled;
 import lombok.Getter;
 import lombok.Setter;
 
 @Serdeable
 @Entity
+@Table(name = "ROLES")
 @Getter
 @Setter
-@Table(name = "PERMISSIONS")
-public class PermissionsEntity {
+public class RolesEntity {
 
     @Id
-    @Column(name = "PERMISSION_ID")
-    private String PermissionId;
-
+    @Column(name = "ROLE_ID")
     @NotNull
-    @Column(name = "PERMISSION_NAME")
-    private String PermissionName;
+    private String roleId;
 
-    @Nullable
+    @Column(name = "ROLE_NAME")
+    @NotNull
+    private String roleName;
+
     @Column(name = "DESCRIPTION")
-    private String Description;
+    @Nullable
+    private String description;
 }
