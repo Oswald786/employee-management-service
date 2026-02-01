@@ -21,6 +21,10 @@ micronaut:
             secret:
               generator:
                 secret: MockTokenSecret
+        endpoints:
+          login:
+            enabled: true
+            path: /auth/login
 
 
 flyway:
