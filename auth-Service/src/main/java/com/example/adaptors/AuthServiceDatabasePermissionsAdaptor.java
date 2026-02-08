@@ -3,7 +3,6 @@ package com.example.adaptors;
 import com.example.Mapper.PermissionsMapper;
 import com.example.entities.PermissionsEntity;
 import com.example.models.PermissionCreationRequestModel;
-import com.example.models.PermissionSearchRequestModel;
 import com.example.models.PermissionsModel;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -174,6 +173,28 @@ public class AuthServiceDatabasePermissionsAdaptor {
             return Optional.ofNullable(permissionsMapper.toModel(result.get(0)));
         }
     }
+
+    public void updatePermissionDescription(Integer permissionId, String description){
+        PermissionsEntity permissionEntity = entityManager.find(PermissionsEntity.class, permissionId);
+        permissionEntity.setDescription(description);
+        entityManager.merge(permissionEntity);
+        entityManager.flush();
+        logger.info("Permission Description Updated Successfully " + " Permission Id: " + permissionId + " Description: " + description);
+    }
+
+    public void deletePermission(Integer permissionId){
+        PermissionsEntity permissionEntity = entityManager.find(PermissionsEntity.class, permissionId);
+        entityManager.remove(permissionEntity);
+        entityManager.flush();
+        logger.info("Permission Deleted Successfully " + " Permission Id: " + permissionId);
+    }
+
+    public void deleteAllPermissions(){
+        entityManager.createQuery("delete from PermissionsEntity").executeUpdate();
+        logger.info("All Permissions Deleted Successfully");
+    }
+
+
 
 
 
