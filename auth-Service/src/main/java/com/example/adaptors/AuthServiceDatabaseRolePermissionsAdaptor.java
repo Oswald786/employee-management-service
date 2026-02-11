@@ -172,8 +172,4 @@ public class AuthServiceDatabaseRolePermissionsAdaptor {
         logger.info("All Role-Permission Links Deleted Successfully for Role Id: {}", roleId);
     }
 
-
-
-
-
 }

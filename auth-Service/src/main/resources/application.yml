@@ -8,7 +8,7 @@ jpa:
   default:
     enabled: true
     entity-scan:
-      packages: com.ethan.Entities
+      packages: com.example.entities
 micronaut:
   application:
     name: authService

@@ -75,6 +75,4 @@ public class PermissionController {
 // These concerns are handled elsewhere to maintain
 // clean separation of responsibilities.
 // -------------------------------------------------------
-
-
 }

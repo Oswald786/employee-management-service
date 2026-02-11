@@ -194,10 +194,4 @@ public class AuthServiceDatabasePermissionsAdaptor {
         logger.info("All Permissions Deleted Successfully");
     }
 
-
-
-
-
-
-
 }
