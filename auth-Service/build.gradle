@@ -90,4 +90,8 @@ tasks.named("dockerfileNative") {
     jdkVersion = "17"
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 
