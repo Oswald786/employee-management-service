@@ -1,110 +1,112 @@
 package com.example.adaptors;
 
+import com.example.Mapper.RolesMapper;
+import com.example.entities.RolesEntity;
+import com.example.exceptionHandling.ExecptionHandlingModels.RoleNotFoundException;
+import com.example.models.RolesModel;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.management.relation.Role;
+import java.util.List;
+
+@NoArgsConstructor
 public class AuthServiceDatabaseRolesAdaptor {
 
-    /*
-     * ============================================================
-     * Role Adaptor – Behaviour & Rules
-     * ============================================================
-     *
-     * A Role consists of three fields:
-     * - roleId (generated, unique)
-     * - roleName (unique, mutable)
-     * - description (mutable)
-     *
-     * Both roleId and roleName must be unique.
-     * The roleName must not duplicate the name of any existing role.
-     *
-     * The description field may contain any explanatory text required.
-     *
-     * ------------------------------------------------------------
-     * Create Role
-     * ------------------------------------------------------------
-     *
-     * Creating a role:
-     * - Generates a new roleId
-     * - Requires a unique roleName
-     * - Requires a description
-     *
-     * A roleName must be validated to ensure it does not already
-     * exist in the system.
-     *
-     * Roles are expected to be limited in number and represent
-     * logical groupings of permissions.
-     *
-     * ------------------------------------------------------------
-     * Retrieve Role
-     * ------------------------------------------------------------
-     *
-     * Supported retrieval methods:
-     * - Retrieve by roleId
-     * - Retrieve by roleName
-     * - Retrieve all roles
-     *
-     * These allow the system to:
-     * - Look up roles for assignment to users
-     * - Inspect existing role definitions
-     *
-     * ------------------------------------------------------------
-     * Update Role
-     * ------------------------------------------------------------
-     *
-     * The following fields may be updated:
-     * - roleName
-     * - description
-     *
-     * roleName updates must enforce uniqueness and must not
-     * conflict with an existing role name.
-     *
-     * Updating a role does not affect:
-     * - User-role assignments
-     * - Role-permission assignments
-     *
-     * These relationships depend only on the roleId.
-     *
-     * ------------------------------------------------------------
-     * Delete Role
-     * ------------------------------------------------------------
-     *
-     * Supported delete operations:
-     * - Delete a specific role by roleId
-     * - Delete a specific role by roleName
-     * - Delete all roles
-     *
-     * Deleting a role removes the role definition.
-     * Any associated user-role or role-permission links must be
-     * handled separately by their respective adaptors.
-     *
-     * ------------------------------------------------------------
-     * Architectural Responsibility
-     * ------------------------------------------------------------
-     *
-     * The Role Adaptor is responsible for:
-     * - Managing creation, retrieval, update, and deletion of roles
-     * - Enforcing uniqueness of roleName
-     * - Delegating persistence operations to the repository layer
-     * - Returning only Models to the service layer
-     *
-     * This adaptor must not:
-     * - Manage role-permission relationships
-     * - Manage user-role relationships
-     *
-     * It only manages role records themselves.
-     *
-     * ------------------------------------------------------------
-     * Design Goal
-     * ------------------------------------------------------------
-     *
-     * This design ensures:
-     * - Role definitions remain consistent and unique
-     * - Role names can evolve without breaking relationships
-     * - Permission and user mappings remain stable via roleId
-     * - The system remains flexible and maintainable
-     *
-     * Roles act as logical groupings of permissions rather than
-     * direct security rules, making them safe to update when needed.
-     *
-     * ============================================================
-     */
+    Logger logger = LoggerFactory.getLogger(AuthServiceDatabaseRolesAdaptor.class);
 
+    @Inject
+    EntityManager entityManager;
+
+    @Inject
+    RolesMapper rolesMapper;
+
+    //Create a new role
+    public void createRole(RolesModel roleToCreate){
+        entityManager.persist(rolesMapper.toEntity(roleToCreate));
+        entityManager.flush();
+        logger.info("Role Created Successfully");
+    }
+
+
+
+    //retrieve roles creator
+
+    //retrive role by role name
+    public RolesModel retrieveRoleByRoleName(String roleName ) {
+        try {
+            RolesEntity returnedEntity = entityManager.createQuery("SELECT r FROM RolesEntity r WHERE r.roleName = :roleName", RolesEntity.class)
+                    .setParameter("roleName", roleName)
+                    .getSingleResult();
+            return rolesMapper.toModel(returnedEntity);
+        }catch (NoResultException e){
+            throw new RoleNotFoundException("Role name not found name given: " + roleName + ".");
+        }
+    }
+
+    //retrive role by id
+    public RolesModel retrieveRoleById(Integer roleId) {
+        RolesEntity returnedEntity = entityManager.find(RolesEntity.class, roleId);
+        if (returnedEntity == null) {
+            throw new RoleNotFoundException("role with id: " + roleId + " not found.");
+        }
+        return rolesMapper.toModel(returnedEntity);
+    }
+
+    //retrieve all roles
+    public List<RolesModel> retrieveAllRoles() {
+        return entityManager.createQuery("SELECT r FROM RolesEntity r", RolesEntity.class).getResultList().stream().map(rolesMapper::toModel).toList();
+    }
+
+    public void deleteRoleById(Integer roleId) {
+        RolesEntity roleToDelete = entityManager.find(RolesEntity.class, roleId);
+        if (roleToDelete == null) {
+            throw new RoleNotFoundException("role by id not found user gave id: " + roleId + ".");
+        }
+        entityManager.remove(roleToDelete);
+        entityManager.flush();
+        logger.info("Role Deleted Successfully");
+    }
+
+    public void deleteRoleByName(String roleName) {
+        int rowsDeleted = entityManager.createQuery(
+                        "DELETE FROM RolesEntity r WHERE r.roleName = :roleName")
+                .setParameter("roleName", roleName)
+                .executeUpdate();
+
+        if (rowsDeleted == 0) {
+            throw new RoleNotFoundException("Role with name '" + roleName + "' not found");
+        }
+
+        logger.info("Role deleted successfully");
+    }
+
+    public void deleteAllRoles() {
+        int rowsDeleted = entityManager.createQuery("DELETE FROM RolesEntity r").executeUpdate();
+        logger.info("All Roles Deleted Successfully Roles deleted: " + rowsDeleted + ".");
+    }
+
+    //update role name
+    public void updateRoleName(Integer roleId, String newRoleName) {
+        RolesEntity roleToUpdate = entityManager.find(RolesEntity.class, roleId);
+        if (roleToUpdate == null) {
+            throw new RoleNotFoundException("Role with ID " + roleId + " not found");
+        }
+        roleToUpdate.setRoleName(newRoleName);
+        entityManager.merge(roleToUpdate);
+        logger.info("Role name updated successfully");
+    }
+
+    //update role description
+    public void updateRoleDescription(Integer roleId, String newRoleDescription) {
+        RolesEntity roleToUpdate = entityManager.find(RolesEntity.class, roleId);
+        if (roleToUpdate == null) {
+            throw new RoleNotFoundException("Role with ID " + roleId + " not found");
+        }
+        roleToUpdate.setDescription(newRoleDescription);
+    }
 }

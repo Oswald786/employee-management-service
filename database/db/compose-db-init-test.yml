@@ -2,8 +2,9 @@ services:
   db:
     image: gvenzl/oracle-free
     ports: ["1521:1521"]
+    container_name: db
     environment:
-      - ORACLE_PASSWORD=oracle
+      ORACLE_PASSWORD: oracle
     healthcheck:
       test: [ "CMD", "healthcheck.sh" ]
       interval: 10s
@@ -12,6 +13,6 @@ services:
       start_period: 5s
       start_interval: 5s
     volumes:
-      - ./init:/container-entrypoint-initdb.d
+       - ./init:/container-entrypoint-initdb.d
 
 

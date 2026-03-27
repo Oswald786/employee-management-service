@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.management.Query;
 import javax.management.relation.Role;
 
 import java.util.List;
@@ -89,14 +90,48 @@ class AuthServiceDatabaseRolePermissionsAdaptorTest {
     }
 
     @Test
-    void retrieveRolePermissionLinksUsingPermissionId() {
-    }
-
-    @Test
+    @DisplayName("Delete a specific role and permission link")
     void deleteRolePermissionLink() {
+
+        //Arrange
+        Integer roleId = 6;
+        Integer permissionId = 9;
+        TypedQuery<RolePermissionsEntity> query = mock(TypedQuery.class);
+        String queryToBeExecuted = "delete from RolePermissionsEntity where roleId = :roleId and permissionId = :permissionId";
+        when(entityManager.createQuery(queryToBeExecuted))
+                .thenReturn(query);
+        when(query.setParameter("roleId", roleId)).thenReturn(query);
+        when(query.setParameter("permissionId", permissionId)).thenReturn(query);
+
+        //Act
+        authServiceDatabaseRolePermissionsAdaptor.deleteRolePermissionLink(roleId, permissionId);
+
+
+        //Assert
+        verify(query).executeUpdate();
+        verify(query).setParameter("roleId", roleId);
+        verify(query).setParameter("permissionId", permissionId);
+        verify(entityManager).createQuery(eq(queryToBeExecuted));
     }
 
     @Test
+    @DisplayName("Delete all role permissions for a specific role")
     void deleteAllRolePermissionsForRole() {
+        //Arrange
+        Integer roleId = 6;
+        TypedQuery<RolePermissionsEntity> query = mock(TypedQuery.class);
+        String queryToBeExecuted = "delete from RolePermissionsEntity where roleId = :roleId";
+        when(entityManager.createQuery(queryToBeExecuted))
+                .thenReturn(query);
+        when(query.setParameter("roleId", roleId)).thenReturn(query);
+
+        //Act
+        authServiceDatabaseRolePermissionsAdaptor.deleteAllRolePermissionsForRole(roleId);
+
+
+        //Assert
+        verify(query).executeUpdate();
+        verify(query).setParameter("roleId", roleId);
+        verify(entityManager).createQuery(eq(queryToBeExecuted));
     }
 }
